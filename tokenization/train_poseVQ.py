@@ -60,7 +60,7 @@ def main(hparams):
         writer = get_loggers(hparams)
         logger.info('EVAL-ONLY: loading checkpoint from {}'.format(hparams.EXP.RESUME_PTH))
         ckpt_file = f'{hparams.EXP.RESUME_PTH}/best_net.pth' if isdir(hparams.EXP.RESUME_PTH) else hparams.EXP.RESUME_PTH
-        ckpt = torch.load(ckpt_file, map_location='cpu')
+        ckpt = torch.load(ckpt_file, map_location='cpu', weights_only=False)
         pretrained_hparams = ckpt['hparams']
         net = get_model(pretrained_hparams)
         net.load_state_dict(ckpt['net'], strict=True)
@@ -71,7 +71,7 @@ def main(hparams):
     ##### ------ resume training ------- #####
     if hparams.EXP.RESUME_TRAINING:
         print(f'RESUME TRAINING: loading checkpoint from {hparams.EXP.RESUME_PTH}. Overiding architecture...')
-        ckpt = torch.load(hparams.EXP.RESUME_PTH, map_location='cpu')
+        ckpt = torch.load(hparams.EXP.RESUME_PTH, map_location='cpu', weights_only=False)
         pretrained_hparams = ckpt['hparams']
         hparams.ARCH = pretrained_hparams.ARCH
         writer = get_loggers(hparams)
